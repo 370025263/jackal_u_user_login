@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="js/jquery-3.0.0.min.js"></script>
+    <style>
+        .register-form{width:480px;color:#000;;position:fixed;top:50%;left:50%;-webkit-transform:translate(-50%,-50%);font-family:"微软雅黑";padding:20px 0px;font-weight:bold;background-color:rgba(255,255,255,0.6);border-radius:18px;text-align:center;padding:30px 0px;box-shadow:0px 0px 10px rgba(0,0,0,0.4);}
+        .register-form div{width:220px;margin:10px auto;}
+
+        .register-form  label{padding:5px 10px;color:#000;color: rgb(64, 92, 96);text-align: left;}
+
+
+
+
+
+    </style>
+    <script>
+
+
+
+
+        $(function(){
+            url="http://localhost:8081/user";
+
+
+
+            $("#submitButton2").click(function () {
+                var username2=$("#username2").val();
+                var password2 = $("#password2").val();
+
+                var college = $("#college").val();
+                var phonecall = $("#phonecall").val();
+                var email = $("#email").val();
+
+
+
+                $.ajax({
+                    url:url+"/register",
+                    type:"post",
+
+                    dataType:"json",
+                    data:{username:username2,password:password2,college:college,phonecall:phonecall,email:email},
+                    success:function (result) {
+                        alert(result);
+                        if(result=="-1"){alert("用户名已存在");}
+                        if(result=="0"){alert("把用户名提示改为：用户名可用。但是这个应该在总的js里面，在用户失去对username焦点时候再发出Ajax请求");}
+                        if(result=="1"){alert("恭喜你注册成功，现在跳转到主页");}
+
+
+                    },
+                    error:function (jqxhr,status,errortext) {alert("jqxhr.status:"+jqxhr.status+"  status:"+status+"     errortext:"+errortext);
+
+                    }
+                });
+
+            })
+
+            }
+
+
+        )
+
+    </script>
+</head>
+<body>
+<div class="register-form">
+    <div><label for="username2">username</label>  <input id="username2" placeholder="请输入用户名"></div>
+    <div><label for="password2">password</label>  <input id="password2" placeholder="请输入密码"></div>
+
+    <div><label for="college">college</label>   <input id="college" placeholder="请输入学校"></div>
+    <div><label  for="phonecall">phone call</label>    <input id="phonecall" placeholder="请输入电话"></div>
+    <div><label for="email" >Email</label>      <input id="email" placeholder="请输入EMaiL"></div>
+    <button id="submitButton2" 提交>提交 </button>
+</div>
+
+</body>
+</html>

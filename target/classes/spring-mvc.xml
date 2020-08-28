@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+       xmlns:jee="http://www.springframework.org/schema/jee"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:util="http://www.springframework.org/schema/util"
+
+       xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+		http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.2.xsd
+		http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.2.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
+
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd">
+    <!-- 配置组件扫描 -->
+    <context:component-scan base-package="com.major" />
+
+    <!-- 配置MVC注解扫描 -->
+    <mvc:annotation-driven />
+    <!-- 配置视图解析器， 如果你不用JSP说实话就用不着不过还是有默认的跳转JSP，跳转至/WEB-INF/XXXX.JSP-->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/" /><!-- 前缀 -->
+        <property name="suffix" value=".jsp" /><!-- 后缀 -->
+    </bean>
+
+    <!-- 我说实话，已经在业务层的componentscan扫描了gson类，但是死活扫不上，想了想，@componentscan只能扫描有@Component声明的包，第三方包可没有component声明，这可怎么扫 -->
+
+
+    <!-- 配置拦截器我就跳过了，是AOP的内容，可以直接返回对象然后通过拦截器转换为JSON目前用不着 -->
+
+
+    <!--在spring配置文件中整合MyBatis生成的DAO对象进入IOC容器中便于调用 -->
+    <!--配置连接池-->
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property name="driverClass" value="com.mysql.jdbc.Driver"/>
+        <property name="jdbcUrl" value="jdbc:mysql://149.28.151.230:3306/test"/>
+        <!--使用远程数据库的话，要记得第一打开3306端口，第二要记得开放数据库权限为所有人而不是localhost,第三不要使用HTTP协议开头，另外本地依赖版本和服务器版本要记得一致-->
+        <property name="user" value="root2"/>
+        <property name="password" value="8088178"/>
+    </bean>
+    <!--配置sessionFactory-->
+<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+    <property name="dataSource" ref="dataSource"></property>
+</bean>
+
+    <!--配置DAO接口所在包的位置-->
+<bean id="mapperScanner" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+    <property name="basePackage" value="com.major.dao"></property>
+</bean>
+</beans>
